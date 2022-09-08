@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapikube-deployment
+  namespace: fastapikube-project
+  labels:
+    app: fastapikube
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: fastapikube-app
+  template:
+    metadata:
+      labels:
+        app: fastapikube-app
+    spec:
+      containers:
+        - image: damian/fastapikube
+          imagePullPolicy: Never
+          name: sample-container
+          ports:
+            - containerPort: 5000
+              name: fastapikube
+          readinessProbe:
+            httpGet:
+              port: 5000
+              path: /docs
+            initialDelaySeconds: 15
+          livenessProbe:
+            httpGet:
+              port: 5000
+              path: /docs
+            initialDelaySeconds: 15
+            periodSeconds: 15
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "0.5"
+            limits:
+              memory: "1Gi"
+              cpu: "1"
