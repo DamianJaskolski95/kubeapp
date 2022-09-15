@@ -1,0 +1,22 @@
+version: "3"
+
+services:
+  web:
+    image: damian/fastapikube
+    ports:
+      - "5000:5000"
+    #volumes:
+    #  - ./main.py:/main.py:rw
+    #  - ./database/:/database/:rw
+  database:
+    image: postgres:bullseye
+    environment:
+      - POSTGRES_PASSWORD=damian12
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+volumes:
+  db:
+    driver: local
